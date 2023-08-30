@@ -1,0 +1,29 @@
+
+
+LOAD CSV WITH HEADERS FROM "https://raw.githubusercontent.com/anujbansal2023/entityresolution/main/input_10k.csv" AS row
+WITH row
+CREATE (x:Recid {Recid:row.recid})
+SET x.givenname = toupper(apoc.text.replace(row.givenname,'[^a-zA-Z ]', '')),
+x.surname = toupper(apoc.text.replace(row.surname,'[^a-zA-Z ]', '')),
+x.suburb = toupper(apoc.text.replace(row.suburb,'[^a-zA-Z0-9 ]', '')),
+x.postcode = apoc.text.replace(row.postcode,'[^0-9]', ''),
+x.source = row.source,
+x.surnameKey = SUBSTRING(toupper(apoc.text.replace(row.surname,'[^a-zA-Z ]', '')),0,2),
+x.givennameKey = SUBSTRING(toupper(apoc.text.replace(row.givenname,'[^a-zA-Z ]', '')),0,2),
+x.suburbKey = SUBSTRING(toupper(apoc.text.replace(row.suburb,'[^a-zA-Z ]', '')),0,2),
+x.postcodeKey = SUBSTRING(toupper(apoc.text.replace(row.postcode,'[^0-9]', '')),0,3);
+
+
+
+MATCH (n:Recid) where any(prop IN n.Recid where prop contains "878723" or prop contains "101994" or prop contains "1964499" or prop contains "2068498" or prop contains "8222450")  RETURN n 
+
+84800
+471013
+785888
+954626
+958662
+363411
+380089
+424139
+489708
+565022
